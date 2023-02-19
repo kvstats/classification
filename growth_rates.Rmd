@@ -1,0 +1,69 @@
+---
+title: "ECO2460 - Growth Rates"
+author: "Kristine Villaluna"
+date: "18/03/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+## Exercise 3: Application - Prediction of Debt Crisis Events
+
+The variable descriptions are as follows: 
+
+* grossdebt2gdpweo: Gross debt (%GDP) 
+* efn2gdp: external financing need EFN (% GDP) 
+* externdebt2gdp: external debt (%GDP) 
+* gfn2gdp: gross financing need GFN (% GDP) 
+* interExtdeb2gdp: Interest on external debt (% GDP) 
+* CA2gdp: Current account (% GDP) 
+* debtserv2expor: Debt service/Exports (%) 
+* credit2privat: Credit to private sector (% GDP) 
+* FCD2GDweo : Foreign currency denominated debt (% public debt) 
+* IntExp2rev: Interest Expenditure/Government revenue (%) 
+* debtserv2res: Debt services/Reserves (%) 
+* stdebt2extdebt: Short term debt /External debt (%) 
+
+### 8. Calculating Growth Rates
+
+```{r}
+library(readxl)
+library(here)
+library(janitor)
+library(data.table)
+library(dplyr)
+```
+
+```{r}
+crisis <- read.csv(here("crisis_ohe_imputed.csv"))
+crisis <- clean_names(crisis)
+
+crisis2 <- read_excel(here("crisisdata.xls"))
+crisis2 <- clean_names(crisis2)
+crisis2 <- crisis2 %>% select(country)
+
+crisis3 <- cbind(crisis,crisis2)
+```
+
+```{r}
+# calculate growth rate for each variable
+growth <- as.data.table(crisis3)[, lapply(.SD, function(x)x/shift(x) - 1), .SDcols = 3:14, by=country]
+
+# rename new growth variables
+colnames(growth)<-paste(colnames(growth),"growth",sep="_")
+
+# combine data frames
+crisis_final <- cbind(crisis3,growth)
+
+# remove country growth
+crisis_final <- crisis_final %>% dplyr::select(-country_growth) %>% select(-country)
+```
+
+```{r}
+# export new csv
+write.csv(crisis_final,"crisis_growth.csv", row.names = FALSE)
+```
+
+
