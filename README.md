@@ -2,11 +2,11 @@
 Inspired by Manassee-Roubini (2009), the purpose of this analysis is to investigate the set of economic and political conditions that are associated with a likely occurrence of a debt crisis. 
 
 As a classification exercise, we will examine the following classifiers:
-a. Penalized Logistic Classifier
-b. Decision Tree Classifier
-c. Random Forest classifier
-d. Boosting tree classifier
-e. K-NN classifier with K=5
+- Penalized Logistic Classifier
+- Decision Tree Classifier
+- Random Forest classifier
+- Boosting tree classifier
+- K-NN classifier with K=5
 
 In order to tune the model's parameters and find the accuracy of my model, we will be using a k-fold cross-validation procedure for hyperparameter tuning and examining AUC scores as a measure of accuracy.
 
